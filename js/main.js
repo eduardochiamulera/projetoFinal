@@ -8,6 +8,7 @@ var app = new Vue({
         showDeleteModal:false,
         produtos: [],
         lojas: [],
+        search:'',
         novoProduto: { 
             nome: "", 
             preco: "", 
@@ -27,6 +28,13 @@ var app = new Vue({
         },
         currentProduct: {}
     },
+    computed:{
+        filterProduto: function(){
+            return this.produtos.filter((produto) =>{
+                return produto.nome.toLowerCase().match(this.search.toLowerCase());
+            })
+        }
+    },
     mounted:function(){
         this.getAllProdutos();
         this.getAllLojas();
@@ -38,10 +46,11 @@ var app = new Vue({
                 if(response.data.error){
                     app.errorMsg = response.data.message;
                 }else{
+                    debugger;
                     app.produtos = response.data;
                 }
             }).catch(function(error){
-                app.errorMsg = error.data.message;
+                app.errorMsg = error.data;
             })
         },
         addProduto(novoProduto){
@@ -158,6 +167,6 @@ var app = new Vue({
         },
         goLojas(){
             window.location.href = 'http://localhost:8000/lojas.html'
-        }
+        },
     }
 })

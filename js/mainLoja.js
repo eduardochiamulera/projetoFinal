@@ -6,6 +6,7 @@ var app = new Vue({
         showAddModal:false,
         showEditModal:false,
         showDeleteModal:false,
+        search:'',
         lojas: [],
         novaLoja: { 
             nome: "",
@@ -19,6 +20,13 @@ var app = new Vue({
             numero: "",
         },
         currentProduct: {}
+    },
+    computed:{
+        filterLoja: function(){
+            return this.lojas.filter((loja) =>{
+                return loja.nome.toLowerCase().match(this.search.toLowerCase());
+            })
+        }
     },
     mounted:function(){
         this.getAllLojas();
