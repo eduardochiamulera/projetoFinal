@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="br">
+<head>    
+    <meta charset="UTF-8">
+    <title>Cadastro de Produtos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- <link rel="stylesheet" type="text/css" href="css/style.css"> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+      <style type="text/css">
+        #modal{
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        #modalEdit{
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.6);
+        }
+    </style>
+    
+</head>
+
+<body>
+      <div id="app">
+          <div class="container-fluid">
+              <div class="row bg-dark">
+                  <div class="col-lg-12">
+                    <p class="text-center text-light display-4 pt-2" style="font-size: 25px;">Cadastro Produtos</p>
+                  </div>
+              </div>
+          </div>
+          <div class="container">
+              <div class="row mt-3">
+                  <div class="col-lg-6">
+                      <h3 class="text-info">Produtos Cadastrados</h3>
+                  </div>
+                  <div class="col-lg-6">
+                    <button class="btn btn-info float-right" @click="showAddModal=true">
+                        <i class="material-icons">add</i>&nbsp;&nbsp;Adicionar Produto
+                    </button>
+                  </div>
+              </div>
+              <hr class="bf-info"/>
+              <div class="alert alert-danger" v-if="errorMsg">
+                    {{errorMsg}}
+              </div>
+              <div class="alert alert-success" v-if="successMsg">
+                    {{successMsg}}
+              </div>
+
+              <div class="row">
+                  <div class="col-lg-12">
+                      <table class="table table-bordered table-striped">
+                          <thead>
+                              <tr class="text-center bg-info text-light">
+                                  <th>Id</th>
+                                  <th>Nome</th>
+                                  <th>Preço</th>
+                                  <th>Quantidade</th>
+                                  <th>Loja Nome</th>
+                                  <th>Editar</th>
+                                  <th>Excluir</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr class="text-center" v-for="produto in produtos">
+                                  <td>{{produto.id}}</td>
+                                  <td>{{produto.nome}}</td>
+                                  <td>{{produto.preco}}</td>
+                                  <td>{{produto.quantidade}}</td>
+                                  <td>{{produto.loja.nome}}</td>
+                                  <td><a href="#" class="text-success" @click="showEditModal=true"><i class="material-icons">create</i></a></td>  
+                                  <td><a href="#" class="text-danger" @click="showDeleteModal=true"><i class="material-icons">delete</i></a></td>  
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Modal add produto -->
+          <div id="modal" v-if="showAddModal">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title">Adicionar Produto</h5>
+                          <button type="button" class="close" @click="showAddModal=false">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <div class="modal-body p-4">
+                        <form >
+                            <div class="form-group">
+                              <input type="hidden" id="idProduto" />
+                              <input type="text" class="form-control form-control-lg" v-model="novoProduto.nome" placeholder="Nome" required="" id="txtnome">
+                            </div>
+                            <div class="form-group">
+                              <input type="text" class="form-control form-control-lg" v-model="novoProduto.preco" placeholder="Preco" required="" id="txtpreco">
+                            </div>
+  
+                            <div class="form-group">
+                              <input type="text" class="form-control form-control-lg" v-model="novoProduto.quantidade" placeholder="Quantidade" required="" id="txtQtd">
+                            </div>
+                            <div class="form-group">
+                              <select class="form-control form-control-lg" id="valLoja" v-model="novoProduto.loja.id" v-for="loja in lojas" v-bind:value="{id: loja.id}">
+                                  <option>{{loja.nome}}</option>
+                              </select>
+                            </div>
+                            <div class="form-group">
+                              <button type="button" v-on:click="salvar" class="btn btn-info btn-block btn-lg" @click="showAddModal=false">Adicionar</button>
+                            </div>
+                            </div>
+                        </form>
+                    </div>
+                  </div>
+              </div>
+               <!-- Modal produto EDITAR-->
+               <div id="modal" v-if="showEditModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Editar Produto</h5>
+                            <button type="button" class="close" @click="showEditModal=false">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body p-4">
+                          <form accept="#" method="POST">
+                              <div class="form-group">
+                                <input type="hidden" id="idProduto" />
+                                <input type="text" class="form-control form-control-lg" placeholder="Nome" required="" id="txtnome">
+                              </div>
+                              <div class="form-group">
+                                <input type="text" class="form-control form-control-lg" placeholder="Preco" required="" id="txtpreco">
+                              </div>
+    
+                              <div class="form-group">
+                                <input type="text" class="form-control form-control-lg" placeholder="Quantidade" required="" id="txtQtd">
+                              </div>
+    
+                              <div class="form-group">
+                                <select id="valLoja">
+                                    <option id=""></option>
+                                </select>
+                              </div>
+                              <div class="form-group">
+                                <button class="btn btn-info btn-block btn-lg" @click="showEditModal=false">Editar</button>
+                              </div>
+                              </div>
+                          </form>
+                      </div>
+                    </div>
+                </div>
+
+                 <!-- Modal add produto EDITAR-->
+                 <div id="modal" v-if="showDeleteModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Deletar Produto</h5>
+                                <button type="button" class="close" @click="showDeleteModal=false">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body p-4">
+                                <h4 class="text-danger">Tem certeza que deseja deletar o produto?</h4>
+                                <h5>Você está deletando 'produto'</h5>
+                                <hr>
+                                <button class="btn btn-danger btn-lg" @click="showDeleteModal=false" >Sim</button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="btn btn-success btn-lg" @click="showDeleteModal=false">Cancelar</button>
+                              </form>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- FIM DIV APP -->
+      </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="js/main.js"></script>
+</html>
