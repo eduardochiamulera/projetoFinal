@@ -26,13 +26,18 @@
 
         public function deletar($id)
         {
-            $qDeletar = "DELETE from lojas WHERE id=:id";            
-            $loja = $this->buscarPorId($id);
-            $pdo = PDOFactory::getConexao();
-            $comando = $pdo->prepare($qDeletar);
-            $comando->bindParam(":id",$id);
-            $comando->execute();
-            return $loja;
+            try{
+                $qDeletar = "DELETE from lojas WHERE id=:id";            
+                $loja = $this->buscarPorId($id);
+                $pdo = PDOFactory::getConexao();
+                $comando = $pdo->prepare($qDeletar);
+                $comando->bindParam(":id",$id);
+                $comando->execute();
+                return $loja;
+            }catch(Exception $ex){
+                return $ex;
+            }
+            
         }
 
         public function atualizar(Loja $loja)

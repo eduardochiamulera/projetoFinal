@@ -58,7 +58,15 @@ var app = new Vue({
                         quantidade: "", 
                         loja: {
                             id : "",
-                            nome: ""
+                            nome: "",
+                            telefone: "",
+                            endereco: "",
+                            cep: "",
+                            bairro: "",
+                            cidade: "",
+                            estado: "",
+                            complemento: "",
+                            numero: "",
                         }}
                     app.successMsg = "Produto Cadastrado com sucesso";
                     self.getAllProdutos();
@@ -93,7 +101,15 @@ var app = new Vue({
                         quantidade: "", 
                         loja: {
                             id : "",
-                            nome: ""
+                            nome: "",
+                            telefone: "",
+                            endereco: "",
+                            cep: "",
+                            bairro: "",
+                            cidade: "",
+                            estado: "",
+                            complemento: "",
+                            numero: "",
                         }}
                     app.successMsg = "Produto Atualizado com sucesso";
                     self.getAllProdutos();
@@ -115,7 +131,15 @@ var app = new Vue({
                         quantidade: "", 
                         loja: {
                             id : "",
-                            nome: ""
+                            nome: "",
+                            telefone: "",
+                            endereco: "",
+                            cep: "",
+                            bairro: "",
+                            cidade: "",
+                            estado: "",
+                            complemento: "",
+                            numero: "",
                         }}
                     app.successMsg = "Produto Deletado com sucesso";                    
                     self.getAllProdutos();
@@ -132,8 +156,8 @@ var app = new Vue({
         atualizar(produto){
             this.novoProduto = produto;
         },
-        deletar(produto){
-            this.novoProduto = produto;
+        goLojas(){
+            window.location.href = 'http://localhost:8000/lojas.html'
         }
     }
 })
